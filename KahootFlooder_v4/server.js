@@ -160,12 +160,14 @@ async function runFlood(cfg){
     }
     await Promise.all(promises);
   } else {
+    // Launch all bots in parallel with small stagger (works on hosted environments)
+    const promises=[];
     for(let i=0;i<count;i++){
       if(stopFlag)break;
-      await makeBot(i);
-      while(pauseFlag&&!stopFlag)await sleep(200);
-      if(delay>0)await sleep(delay);
+      promises.push(makeBot(i));
+      await sleep(Math.min(delay||150, 150)); // max 150ms between each
     }
+    await Promise.all(promises);
   }
   broadcast({type:"flood-done"});
 }
