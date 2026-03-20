@@ -1,4 +1,3 @@
-
 const http = require("http");
 const fs = require("fs");
 const path = require("path");
@@ -483,7 +482,15 @@ const server=http.createServer((req,res)=>{
 });
 
 server.on("error",e=>{if(e.code==="EADDRINUSE"){console.error("Port already in use");process.exit(1);}});
-const PORT=process.env.PORT||7842;
+
+// Keep-alive: ping self every 14 minutes to prevent Render from sleeping
+if(process.env.RENDER_EXTERNAL_URL){
+  setInterval(()=>{
+    const url=process.env.RENDER_EXTERNAL_URL;
+    require("https").get(url,(r)=>{}).on("error",()=>{});
+  }, 14*60*1000);
+}
+const PORT=process.env.PORT||8080;
 server.listen(PORT,"0.0.0.0",()=>{
   console.log("\n  ╔══════════════════════════════════════╗");
   console.log("  ║   KAHOOTFLOODER v3.1 | Port 7842    ║");
