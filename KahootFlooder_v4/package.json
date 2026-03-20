@@ -1,0 +1,11 @@
+{
+  "name": "kahootflooder",
+  "version": "4.0.0",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "dependencies": {
+    "kahoot.js-latest": "1.0.8"
+  }
+}

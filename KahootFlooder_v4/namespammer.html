@@ -1,0 +1,183 @@
+<!DOCTYPE html><html lang="de"><head><meta charset="UTF-8"/><title>Name Spammer</title>
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@700;900&family=Share+Tech+Mono&family=Rajdhani:wght@500;600;700&display=swap" rel="stylesheet"/>
+<style>
+:root{--bg:#080c0e;--bg2:#0c1214;--bg3:#101a1c;--border:#1a2a2e;--teal:#00e5c8;--text:#c8dde0;--dim:#3a5560;--red:#ff3e6c;--yellow:#ffe046;--purple:#a78bfa}
+*{margin:0;padding:0;box-sizing:border-box}html,body{height:100%;overflow:hidden}
+body{background:var(--bg);color:var(--text);font-family:'Rajdhani',sans-serif}
+body::before{content:'';position:fixed;inset:0;background-image:linear-gradient(rgba(255,224,70,0.025) 1px,transparent 1px),linear-gradient(90deg,rgba(255,224,70,0.025) 1px,transparent 1px);background-size:48px 48px;pointer-events:none;z-index:0}
+body::after{content:'';position:fixed;top:-150px;left:50%;transform:translateX(-50%);width:700px;height:500px;background:radial-gradient(ellipse,rgba(255,224,70,0.04) 0%,transparent 70%);pointer-events:none;z-index:0}
+.scanline{position:fixed;top:0;left:0;right:0;height:2px;background:linear-gradient(to right,transparent,rgba(255,224,70,0.15),transparent);animation:scan 7s linear infinite;pointer-events:none;z-index:999}
+@keyframes scan{0%{transform:translateY(-10px)}100%{transform:translateY(100vh)}}
+.wrap{position:relative;z-index:1;display:grid;grid-template-columns:310px 1fr;height:100vh}
+.left{background:rgba(12,18,20,0.96);border-right:1px solid var(--border);padding:14px;display:flex;flex-direction:column;gap:11px;overflow-y:auto}
+.left::-webkit-scrollbar{width:3px}.left::-webkit-scrollbar-thumb{background:var(--border)}
+.ph{display:flex;align-items:center;gap:10px;padding-bottom:10px;border-bottom:1px solid var(--border)}
+.ph-icon{width:32px;height:32px;border-radius:7px;display:flex;align-items:center;justify-content:center;font-size:16px;background:rgba(255,224,70,0.12);border:1px solid rgba(255,224,70,0.3);flex-shrink:0}
+.ph-title{font-family:'Orbitron',sans-serif;font-size:11px;font-weight:700;letter-spacing:3px;text-transform:uppercase;color:var(--yellow)}
+.home-link{margin-left:auto;font-size:9px;font-family:'Orbitron',sans-serif;letter-spacing:2px;color:var(--dim);text-decoration:none;border:1px solid var(--border);padding:4px 10px;border-radius:3px;transition:all .15s;flex-shrink:0}
+.home-link:hover{border-color:var(--teal);color:var(--teal)}
+.lbl{font-size:10px;font-weight:700;color:var(--dim);letter-spacing:2px;text-transform:uppercase;margin-bottom:5px}
+input[type=text],input[type=number],select,textarea{background:rgba(16,26,28,0.9);border:1px solid var(--border);border-radius:6px;padding:8px 12px;color:var(--text);font-family:'Share Tech Mono',monospace;font-size:13px;outline:none;transition:border-color .2s;width:100%}
+input:focus,select:focus,textarea:focus{border-color:var(--yellow)}
+textarea{resize:vertical;min-height:80px;font-size:12px;line-height:1.5}
+select option{background:var(--bg3)}
+#pinInput{font-size:20px;letter-spacing:5px;text-align:center;color:var(--yellow);font-weight:700}
+#pinInput::placeholder{font-size:12px;letter-spacing:2px;color:var(--dim)}
+.count-wrap{display:flex;gap:8px;align-items:center}
+#countNum{width:90px!important;text-align:center;font-size:18px!important;font-weight:700;color:var(--yellow)!important;flex-shrink:0}
+#countNum::-webkit-inner-spin-button,#countNum::-webkit-outer-spin-button{-webkit-appearance:none}
+#countSlider{flex:1;-webkit-appearance:none;height:4px;background:linear-gradient(to right,var(--yellow) 0%,var(--yellow) var(--v,0%),var(--border) var(--v,0%));border-radius:2px;cursor:pointer;outline:none}
+#countSlider::-webkit-slider-thumb{-webkit-appearance:none;width:15px;height:15px;background:var(--yellow);border-radius:50%;box-shadow:0 0 8px rgba(255,224,70,0.5)}
+.mode-grid{display:grid;grid-template-columns:1fr 1fr;gap:5px}
+.mc{background:var(--bg3);border:2px solid var(--border);border-radius:7px;padding:8px;cursor:pointer;text-align:center;transition:all .2s}
+.mc.sel{border-color:var(--yellow);background:rgba(255,224,70,0.06)}
+.mc-icon{font-size:18px;margin-bottom:3px}
+.mc-lbl{font-family:'Orbitron',sans-serif;font-size:8px;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:var(--dim)}
+.mc.sel .mc-lbl{color:var(--yellow)}
+.preview-box{background:var(--bg3);border:1px solid var(--border);border-radius:7px;padding:10px;font-family:'Share Tech Mono',monospace;font-size:12px;color:var(--yellow);min-height:40px;display:flex;flex-wrap:wrap;gap:5px}
+.preview-name{background:rgba(255,224,70,0.1);border:1px solid rgba(255,224,70,0.25);border-radius:4px;padding:2px 7px;font-size:11px}
+.stats-grid{display:grid;grid-template-columns:1fr 1fr;gap:6px}
+.sc{background:var(--bg3);border:1px solid var(--border);border-radius:7px;padding:8px;text-align:center}
+.sv{font-family:'Orbitron',sans-serif;font-size:18px;font-weight:700;line-height:1;margin-bottom:2px}
+.sl{font-size:10px;color:var(--dim);letter-spacing:1px;text-transform:uppercase}
+.btn{width:100%;padding:11px;border-radius:7px;border:none;font-family:'Orbitron',sans-serif;font-size:10px;font-weight:900;letter-spacing:3px;text-transform:uppercase;cursor:pointer;transition:all .18s}
+.btn:disabled{opacity:0.3;cursor:not-allowed}
+.btn-yellow{background:linear-gradient(135deg,var(--yellow),#ccb200);color:#080c0e;box-shadow:0 4px 20px rgba(255,224,70,0.3)}
+.btn-yellow:hover:not(:disabled){transform:translateY(-2px);box-shadow:0 6px 28px rgba(255,224,70,0.5)}
+.btn-red{background:rgba(255,62,108,0.08);border:1px solid var(--red)!important;color:var(--red)}
+.btn-red:hover:not(:disabled){background:rgba(255,62,108,0.18)}
+hr{border:none;border-top:1px solid var(--border)}
+.right{display:flex;flex-direction:column;padding:16px;gap:10px;overflow:hidden}
+.banner{padding:8px 16px;border-radius:6px;font-family:'Orbitron',sans-serif;font-size:10px;font-weight:700;letter-spacing:2px;text-align:center;text-transform:uppercase;transition:all .3s}
+.bi{background:rgba(16,26,28,0.8);border:1px solid var(--border);color:var(--dim)}
+.bt{background:rgba(255,224,70,0.08);border:1px solid rgba(255,224,70,0.35);color:var(--yellow);animation:bp 2s infinite}
+.bd{background:rgba(255,224,70,0.06);border:1px solid rgba(255,224,70,0.3);color:var(--yellow)}
+.be{background:rgba(255,62,108,0.08);border:1px solid rgba(255,62,108,0.3);color:var(--red)}
+@keyframes bp{0%,100%{opacity:1}50%{opacity:.6}}
+.monitor{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+.mon-card{background:var(--bg3);border:1px solid var(--border);border-radius:7px;padding:10px 12px}
+.mon-top{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:6px}
+.mon-lbl{font-family:'Orbitron',sans-serif;font-size:8px;letter-spacing:2px;color:var(--dim);text-transform:uppercase}
+.mon-val{font-family:'Orbitron',sans-serif;font-size:14px;font-weight:700}
+.mon-bar-bg{height:4px;background:var(--border);border-radius:2px;overflow:hidden}
+.mon-bar{height:100%;border-radius:2px;transition:width .8s,background .5s}
+.mon-sub{font-size:10px;color:var(--dim);margin-top:4px}
+.log-box{flex:1;background:var(--bg2);border:1px solid var(--border);border-radius:7px;display:flex;flex-direction:column;overflow:hidden;min-height:0}
+.log-top{padding:8px 14px;border-bottom:1px solid var(--border);display:flex;justify-content:space-between;align-items:center;background:rgba(12,18,20,.5);flex-shrink:0}
+.log-lbl{font-family:'Orbitron',sans-serif;font-size:9px;font-weight:700;letter-spacing:3px;color:var(--dim);text-transform:uppercase;display:flex;align-items:center;gap:7px}
+.pulse{width:6px;height:6px;border-radius:50%;background:var(--yellow);box-shadow:0 0 5px var(--yellow);animation:pp 1.5s infinite}
+.pulse.off{background:var(--dim);box-shadow:none;animation:none}
+@keyframes pp{0%,100%{opacity:1}50%{opacity:.3}}
+.clr-btn{background:none;border:1px solid var(--border);border-radius:4px;padding:3px 9px;color:var(--dim);font-size:10px;cursor:pointer;font-family:'Rajdhani',sans-serif;text-transform:uppercase;letter-spacing:1px;transition:all .15s}
+.clr-btn:hover{border-color:var(--yellow);color:var(--yellow)}
+#log{flex:1;overflow-y:auto;padding:6px;font-family:'Share Tech Mono',monospace;font-size:11px;min-height:0}
+#log::-webkit-scrollbar{width:3px}
+.le{padding:2px 7px;border-radius:3px;display:flex;gap:8px;align-items:baseline;animation:fi .2s ease}
+@keyframes fi{from{opacity:0;transform:translateX(-3px)}to{opacity:1;transform:none}}
+.lt{color:var(--dim);flex-shrink:0;font-size:10px}.ln{color:var(--yellow);flex-shrink:0;min-width:120px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.lm{flex:1}
+.ok .lm{color:var(--yellow)}.er .lm{color:var(--red)}.in .lm{color:var(--teal)}
+</style></head>
+<body>
+<div class="scanline"></div>
+<div class="wrap">
+<div class="left">
+  <div class="ph"><div class="ph-icon">💬</div><div class="ph-title">Name Spammer</div><a href="/" class="home-link">← HOME</a></div>
+  <div><div class="lbl">Game PIN</div><input type="text" id="pinInput" maxlength="12" placeholder="PIN eingeben..."/></div>
+  <div>
+    <div class="lbl">Anzahl Bots</div>
+    <div class="count-wrap">
+      <input type="number" id="countNum" value="100" min="1" max="99999" oninput="syncCount('i')"/>
+      <input type="range" id="countSlider" min="1" max="5000" value="100" oninput="syncCount('s')"/>
+    </div>
+  </div>
+  <div>
+    <div class="lbl">Name-Modus</div>
+    <div class="mode-grid">
+      <div class="mc sel" id="mFun" onclick="setMode('funny')"><div class="mc-icon">😂</div><div class="mc-lbl">Funny</div></div>
+      <div class="mc" id="mEmo" onclick="setMode('emoji')"><div class="mc-icon">🔥</div><div class="mc-lbl">Emoji</div></div>
+      <div class="mc" id="mMix" onclick="setMode('mixed')"><div class="mc-icon">🎲</div><div class="mc-lbl">Gemischt</div></div>
+      <div class="mc" id="mCus" onclick="setMode('custom')"><div class="mc-icon">✏️</div><div class="mc-lbl">Custom</div></div>
+    </div>
+  </div>
+  <div id="customNameDiv" style="display:none">
+    <div class="lbl">Custom Namen (1 pro Zeile)</div>
+    <textarea id="customNames" placeholder="xXxNoob&#10;MeinLehrer&#10;Administrator&#10;...">xXxNoob
+MeinLehrer
+Administrator
+WiFiOff
+SkibidiToilet
+GigaCringe
+L+Ratio+Bozo</textarea>
+  </div>
+  <div>
+    <div class="lbl">Vorschau</div>
+    <div class="preview-box" id="preview">...</div>
+  </div>
+  <hr/>
+  <div class="stats-grid">
+    <div class="sc"><div class="sv" style="color:var(--yellow)" id="sJ">0</div><div class="sl">Joined</div></div>
+    <div class="sc"><div class="sv" style="color:var(--red)" id="sF">0</div><div class="sl">Failed</div></div>
+  </div>
+  <hr/>
+  <button class="btn btn-yellow" id="btnGo" onclick="startSpam()">💬 SPAM STARTEN</button>
+  <button class="btn btn-red" id="btnStop" onclick="stopAll()" disabled>■ STOPPEN</button>
+</div>
+<div class="right">
+  <div id="banner" class="banner bi">● Bereit — Namen spammen</div>
+  <div class="monitor">
+    <div class="mon-card"><div class="mon-top"><div class="mon-lbl">CPU</div><div class="mon-val" id="mCpu" style="color:var(--yellow)">0%</div></div><div class="mon-bar-bg"><div class="mon-bar" id="bCpu" style="background:var(--yellow)"></div></div><div class="mon-sub" id="mCpuSub">-</div></div>
+    <div class="mon-card"><div class="mon-top"><div class="mon-lbl">RAM</div><div class="mon-val" id="mRam" style="color:var(--purple)">0%</div></div><div class="mon-bar-bg"><div class="mon-bar" id="bRam" style="background:var(--purple)"></div></div><div class="mon-sub" id="mRamSub">-</div></div>
+    <div class="mon-card"><div class="mon-top"><div class="mon-lbl">Aktive Bots</div><div class="mon-val" id="mBots" style="color:var(--yellow)">0</div></div><div class="mon-bar-bg"><div class="mon-bar" id="bBots" style="background:var(--yellow)"></div></div><div class="mon-sub" id="mBotsSub">Peak: 0</div></div>
+  </div>
+  <div class="log-box">
+    <div class="log-top"><div class="log-lbl"><div class="pulse off" id="pulse"></div>Name Log</div><button class="clr-btn" onclick="document.getElementById('log').innerHTML=''">Clear</button></div>
+    <div id="log"></div>
+  </div>
+</div>
+</div>
+<script>
+const FUNNY=['xXxNoob','MLGPro','YourMom','SkibidiBot','L+Ratio','Certified','Ligma','HackBot','Admin','Moderator','Teacher','WiFiOff','Bozo','Clown','NPC','Based','Gigachad','Sigma','Ohio','Rizz','Slay','Bussin','NoSkill','CryAboutIt','TouchGrass','SkillIssue','Caught_L','Fr_Fr','Nah_Bro','Sus','Cooked','Fumbled','Brainrot','Delulu','Lowkey','Highkey','Glizzy','Rizzing','Sussy','Baka'];
+const EMOJIS=['💀','🗿','😭','🤡','💅','🔥','⚡','👑','🎯','🤖','👾','🎮','💯','🧠','🫡','💀','🐸','👀','😤','🤌'];
+let nameMode='funny',_maxBots=0,_startTime=null,stats={j:0,f:0};
+
+function syncCount(src){const s=document.getElementById("countSlider"),n=document.getElementById("countNum");if(src==='s')n.value=s.value;else{const v=Math.max(1,parseInt(n.value)||1);n.value=v;s.value=Math.min(v,5000);}s.style.setProperty("--v",Math.min(parseInt(n.value)||1,5000)/5000*100+"%");}syncCount('s');
+
+function setMode(m){nameMode=m;['Fun','Emo','Mix','Cus'].forEach(x=>document.getElementById("m"+x).classList.remove("sel"));document.getElementById("m"+{funny:'Fun',emoji:'Emo',mixed:'Mix',custom:'Cus'}[m]).classList.add("sel");document.getElementById("customNameDiv").style.display=m==='custom'?'block':'none';updatePreview();}
+
+function getPreviewNames(){
+  const names=[];
+  if(nameMode==='custom'){const lines=document.getElementById("customNames").value.split('\n').filter(l=>l.trim());for(let i=0;i<Math.min(6,lines.length);i++)names.push(lines[i].trim());}
+  else if(nameMode==='funny'){for(let i=0;i<6;i++)names.push(FUNNY[Math.floor(Math.random()*FUNNY.length)]);}
+  else if(nameMode==='emoji'){for(let i=0;i<6;i++)names.push(EMOJIS[Math.floor(Math.random()*EMOJIS.length)]+"Bot"+(i+1));}
+  else{for(let i=0;i<6;i++){const r=Math.random();if(r<0.4)names.push(FUNNY[Math.floor(Math.random()*FUNNY.length)]);else if(r<0.7)names.push(EMOJIS[Math.floor(Math.random()*EMOJIS.length)]+"Bot");else names.push("bot"+(i+1));}}
+  return names;
+}
+function updatePreview(){const p=document.getElementById("preview");p.innerHTML='';getPreviewNames().forEach(n=>{const s=document.createElement("span");s.className="preview-name";s.textContent=n;p.appendChild(s);});}
+updatePreview();
+document.getElementById("customNames").addEventListener("input",updatePreview);
+
+function fmtTime(s){if(s<60)return s+"s";if(s<3600)return Math.floor(s/60)+"m "+(s%60)+"s";return Math.floor(s/3600)+"h "+Math.floor((s%3600)/60)+"m";}
+function addLog(n,m,c){const log=document.getElementById("log");const el=document.createElement("div");el.className="le "+(c||"");const t=new Date().toTimeString().slice(0,8);el.innerHTML='<span class="lt">'+t+'</span><span class="ln">'+n+'</span><span class="lm">'+m+'</span>';log.appendChild(el);log.scrollTop=log.scrollHeight;while(log.children.length>600)log.removeChild(log.firstChild);}
+function setBanner(cls,txt){const b=document.getElementById("banner");b.className="banner "+cls;b.textContent=txt;}
+const es=new EventSource("/events");
+es.onmessage=function(e){const v=JSON.parse(e.data);
+  if(v.type==="stats"){const cpu=v.cpu;document.getElementById("mCpu").textContent=cpu+"%";document.getElementById("bCpu").style.width=cpu+"%";document.getElementById("mCpuSub").textContent=navigator.hardwareConcurrency+" Kerne";document.getElementById("mRam").textContent=v.memPct+"%";document.getElementById("bRam").style.width=v.memPct+"%";document.getElementById("mRamSub").textContent=v.memUsed+"MB / "+v.memTotal+"MB";if(v.bots>_maxBots)_maxBots=v.bots;document.getElementById("mBots").textContent=v.bots;document.getElementById("bBots").style.width=(_maxBots>0?Math.round(v.bots/_maxBots*100):0)+"%";document.getElementById("mBotsSub").textContent="Peak: "+_maxBots;if(_startTime)document.getElementById("mUptime")?document.getElementById("mUptime").textContent=fmtTime(Math.floor((Date.now()-_startTime)/1000)):null;return;}
+  if(v.type==="reset"){stats={j:0,f:0};_maxBots=0;_startTime=Date.now();document.getElementById("pulse").className="pulse";}
+  else if(v.type==="joined"){stats.j++;document.getElementById("sJ").textContent=stats.j;addLog(v.name,"Joined ✓","ok");}
+  else if(v.type==="failed"){stats.f++;document.getElementById("sF").textContent=stats.f;}
+  else if(v.type==="flood-done"){document.getElementById("btnGo").disabled=false;document.getElementById("btnStop").disabled=true;document.getElementById("pulse").className="pulse off";setBanner("bd","✓ SPAM FERTIG: "+stats.j+" Namen eingeschleust");}
+  else if(v.type==="stopped"){document.getElementById("btnGo").disabled=false;document.getElementById("btnStop").disabled=true;document.getElementById("pulse").className="pulse off";setBanner("bi","Gestoppt");}
+};
+async function startSpam(){
+  const pin=document.getElementById("pinInput").value.replace(/\D/g,"");
+  if(!pin||pin.length<4){setBanner("be","⚠ Ungültiger PIN!");return;}
+  const count=Math.max(1,parseInt(document.getElementById("countNum").value)||1);
+  let baseName="bot",extraNames=null;
+  if(nameMode==='custom'){extraNames=document.getElementById("customNames").value.split('\n').filter(l=>l.trim());}
+  document.getElementById("btnGo").disabled=true;document.getElementById("btnStop").disabled=false;
+  setBanner("bt","💬 SPAMMING "+count+" Namen auf PIN "+pin+"...");
+  addLog("SYS","Name Spam: "+count+" Bots | Modus: "+nameMode,"in");
+  fetch("/start-namespam",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({pin,name:baseName,count,nameMode,delay:200,ansMode:"random",timingMode:"random",customNames:extraNames})});
+}
+async function stopAll(){fetch("/stop",{method:"POST"});}
+</script></body></html>
